@@ -1,0 +1,76 @@
+@import '~antd/dist/antd.css';
+
+.container {
+  width: 300px;
+  height: 380px;
+  background: rgb(255, 255, 255);
+  padding: 5px;
+  border-radius: 5px;
+  box-shadow: 0px 15px 40px rgba(0, 0, 0, 1);
+  text-align: center;
+}
+
+.timer {
+  height: 300px;
+  display: flex;
+
+  &__inner {
+    margin: auto;
+  }
+
+  &__control {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.countdown {
+  display: flex;
+
+  &__inner {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__progress {
+    margin-bottom: 50px;
+  }
+
+  &__control {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 35px;
+  }
+}
+
+.countdowninput {
+  &__slider {
+    margin-bottom: 30px;
+  }
+
+  &__inputnumber {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__inputnumber-minutes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__inputnumber-seconds {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.ant-slider-handle {
+  background-color: #0f8ee9;
+}
+
+.ant-btn,
+.ant-input-number {
+  width: 80px;
+}
