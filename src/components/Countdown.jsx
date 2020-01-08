@@ -7,17 +7,17 @@ class Countdown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timerOn: false,
+      onCountdown: false,
+      startTimeCountdown: 0,
       runningTime: 0,
-      startTime: 0,
       disabledSlider: false,
     };
     this.audio = new Audio(audioSRC);
   }
 
-  startTimer = () => {
+  startCountdown = () => {
     this.setState(() => ({
-      timerOn: true,
+      onCountdown: true,
       disabledSlider: true,
     }));
 
@@ -30,36 +30,42 @@ class Countdown extends Component {
         });
       } else {
         clearInterval(this.timer);
-        this.setState({ timerOn: false, disabledSlider: false });
+        this.setState({ onCountdown: false, disabledSlider: false });
         this.audio.play();
       }
     }, 1000);
   };
 
-  stopTimer = () => {
+  stopCountdown = () => {
     clearInterval(this.timer);
-    this.setState({ timerOn: false });
+    this.setState({ onCountdown: false });
   };
 
-  handleClick = () => {
-    const { timerOn } = this.state;
-    if (timerOn) {
-      this.stopTimer();
-    } else {
-      this.startTimer();
-    }
-  };
-
-  handleReset = () => {
+  resetCountdown = () => {
     clearInterval(this.timer);
-    this.setState({ runningTime: 0, timerOn: false, disabledSlider: false });
+    this.setState({ runningTime: 0, onCountdown: false, disabledSlider: false });
   };
 
-  handleChange = value => {
+  handleChangeSlider = value => {
+    this.setState({ onCountdown: false });
     this.setState(() => ({
       runningTime: value,
-      startTime: value,
+      startTimeCountdown: value,
     }));
+  };
+
+  handleChangeInputMinutes = value => {
+    this.setState({
+      runningTime: value * 60000,
+      startTimeCountdown: value * 60000,
+    });
+  };
+
+  handleChangeInputSeconds = value => {
+    this.setState({
+      runningTime: value * 1000,
+      startTimeCountdown: value * 1000,
+    });
   };
 
   msToTime = duration => {
@@ -72,23 +78,31 @@ class Countdown extends Component {
   };
 
   render() {
-    const { timerOn, startTime, runningTime, disabledSlider } = this.state;
+    const { onCountdown, startTimeCountdown, runningTime, disabledSlider } = this.state;
     return (
       <div className="countdown">
         <div className="countdown__inner">
           <div className="countdown__progress">
-            <Progress percent={Math.round((runningTime / startTime) * 100)} showInfo={false} />
+            <Progress
+              percent={Math.round((runningTime / startTimeCountdown) * 100)}
+              showInfo={false}
+            />
           </div>
           <h1 className="countdown__display">{this.msToTime(runningTime)}</h1>
           <div className="countdown__control">
-            <Button type={timerOn ? 'danger' : 'primary'} onClick={this.handleClick}>
-              {timerOn ? 'stop' : 'start'}
+            <Button
+              type={onCountdown ? 'danger' : 'primary'}
+              onClick={onCountdown ? this.stopCountdown : this.startCountdown}
+            >
+              {onCountdown ? 'stop' : 'start'}
             </Button>
-            <Button onClick={this.handleReset}>reset</Button>
+            <Button onClick={this.resetCountdown}>reset</Button>
           </div>
           <div className="countdowninput">
             <CountdownInput
-              onChange={this.handleChange}
+              handleChangeSlider={this.handleChangeSlider}
+              handleChangeInputMinutes={this.handleChangeInputMinutes}
+              handleChangeInputSeconds={this.handleChangeInputSeconds}
               disabledSlider={disabledSlider}
               runningTime={runningTime}
             />

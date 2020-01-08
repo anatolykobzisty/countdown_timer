@@ -7,23 +7,31 @@ class Timer extends Component {
     runningTime: 0,
   };
 
-  handleClick = () => {
-    this.setState(state => {
-      if (state.timerOn) {
-        clearInterval(this.timer);
-      } else {
-        const startTime = Date.now() - state.runningTime;
-        this.timer = setInterval(() => {
-          this.setState({ runningTime: Date.now() - startTime });
-        }, 20);
-      }
-      return { timerOn: !state.timerOn };
-    });
+  startTimer = () => {
+    const { runningTime } = this.state;
+    const startTime = Date.now() - runningTime;
+    this.setState({ timerOn: true });
+    this.timer = setInterval(() => {
+      this.setState({ runningTime: Date.now() - startTime });
+    }, 20);
   };
 
-  handleReset = () => {
+  stopTimer = () => {
+    this.setState({ timerOn: false });
     clearInterval(this.timer);
-    this.setState({ runningTime: 0, timerOn: false });
+  };
+
+  resetTimer = () => {
+    const { timerOn } = this.state;
+
+    if (timerOn) {
+      this.stopTimer();
+      return false;
+    }
+    return this.setState({
+      runningTime: 0,
+      timerOn: false,
+    });
   };
 
   msToTime = duration => {
@@ -44,10 +52,13 @@ class Timer extends Component {
         <div className="timer__inner">
           <h1 className="timer__display">{this.msToTime(runningTime)}</h1>
           <div className="timer__control">
-            <Button type={timerOn ? 'danger' : 'primary'} onClick={this.handleClick}>
+            <Button
+              type={timerOn ? 'danger' : 'primary'}
+              onClick={timerOn ? this.stopTimer : this.startTimer}
+            >
               {timerOn ? 'stop' : 'start'}
             </Button>
-            <Button onClick={this.handleReset}>reset</Button>
+            <Button onClick={this.resetTimer}>reset</Button>
           </div>
         </div>
       </div>

@@ -4,7 +4,13 @@ import { Slider, InputNumber } from 'antd';
 
 class CountdownInput extends PureComponent {
   render() {
-    const { onChange, disabledSlider } = this.props;
+    const {
+      handleChangeSlider,
+      handleChangeInputMinutes,
+      handleChangeInputSeconds,
+      disabledSlider,
+      runningTime,
+    } = this.props;
     return (
       <>
         <div className="countdowninput__slider">
@@ -12,8 +18,9 @@ class CountdownInput extends PureComponent {
             min={0}
             max={3600000}
             step={15000}
-            onChange={onChange}
+            onChange={handleChangeSlider}
             tooltipVisible={false}
+            value={runningTime}
             disabled={disabledSlider}
             autoFocus
           />
@@ -23,9 +30,10 @@ class CountdownInput extends PureComponent {
             <span>minutes</span>
             <InputNumber
               min={0}
-              max={43200000}
-              step={60000}
-              onChange={onChange}
+              max={720}
+              step={1}
+              onChange={handleChangeInputMinutes}
+              value={parseInt((runningTime / (1000 * 60)) % 60, 10)}
               disabled={disabledSlider}
             />
           </div>
@@ -33,9 +41,10 @@ class CountdownInput extends PureComponent {
             <span>seconds</span>
             <InputNumber
               min={0}
-              max={43200000}
-              step={1000}
-              onChange={onChange}
+              max={60}
+              step={15}
+              onChange={handleChangeInputSeconds}
+              value={parseInt((runningTime / 1000) % 60, 10)}
               disabled={disabledSlider}
             />
           </div>
@@ -46,11 +55,17 @@ class CountdownInput extends PureComponent {
 }
 
 CountdownInput.propTypes = {
-  onChange: PropTypes.func,
+  handleChangeSlider: PropTypes.func,
+  handleChangeInputMinutes: PropTypes.func,
+  handleChangeInputSeconds: PropTypes.func,
+  runningTime: PropTypes.number,
   disabledSlider: PropTypes.bool,
 };
 CountdownInput.defaultProps = {
-  onChange: null,
+  handleChangeSlider: null,
+  handleChangeInputMinutes: null,
+  handleChangeInputSeconds: null,
+  runningTime: 0,
   disabledSlider: false,
 };
 export default CountdownInput;
