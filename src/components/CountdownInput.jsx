@@ -16,8 +16,8 @@ class CountdownInput extends PureComponent {
         <div className="countdowninput__slider">
           <Slider
             min={0}
-            max={3600000}
-            step={15000}
+            max={3600}
+            step={15}
             onChange={handleChangeSlider}
             tooltipVisible={false}
             value={runningTime}
@@ -33,7 +33,7 @@ class CountdownInput extends PureComponent {
               max={720}
               step={1}
               onChange={handleChangeInputMinutes}
-              value={parseInt((runningTime / (1000 * 60)) % 60, 10)}
+              value={runningTime}
               disabled={disabledSlider}
             />
           </div>
@@ -41,10 +41,10 @@ class CountdownInput extends PureComponent {
             <span>seconds</span>
             <InputNumber
               min={0}
-              max={60}
-              step={15}
+              max={59}
+              step={1}
               onChange={handleChangeInputSeconds}
-              value={parseInt((runningTime / 1000) % 60, 10)}
+              value={runningTime}
               disabled={disabledSlider}
             />
           </div>

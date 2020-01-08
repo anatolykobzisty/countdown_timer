@@ -16,14 +16,14 @@ class Countdown extends Component {
   }
 
   startCountdown = () => {
-    this.setState(() => ({
+    this.setState({
       onCountdown: true,
       disabledSlider: true,
-    }));
+    });
 
     this.timer = setInterval(() => {
       const { runningTime } = this.state;
-      const newTime = runningTime - 1000;
+      const newTime = runningTime - 1;
       if (newTime >= 0) {
         this.setState({
           runningTime: newTime,
@@ -47,30 +47,29 @@ class Countdown extends Component {
   };
 
   handleChangeSlider = value => {
-    this.setState({ onCountdown: false });
-    this.setState(() => ({
+    this.setState({
       runningTime: value,
       startTimeCountdown: value,
-    }));
+    });
   };
 
   handleChangeInputMinutes = value => {
     this.setState({
-      runningTime: value * 60000,
-      startTimeCountdown: value * 60000,
+      runningTime: value * 60,
+      startTimeCountdown: value * 60,
     });
   };
 
   handleChangeInputSeconds = value => {
     this.setState({
-      runningTime: value * 1000,
-      startTimeCountdown: value * 1000,
+      runningTime: value,
+      startTimeCountdown: value,
     });
   };
 
   msToTime = duration => {
-    let seconds = parseInt((duration / 1000) % 60, 10);
-    let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
+    let seconds = parseInt(duration % 60, 10);
+    let minutes = parseInt((duration / 60) % 60, 10);
 
     minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     seconds = seconds < 10 ? ` 0${seconds} ` : ` ${seconds} `;
