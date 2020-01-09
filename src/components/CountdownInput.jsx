@@ -8,8 +8,8 @@ class CountdownInput extends PureComponent {
       handleChangeSlider,
       handleChangeInputMinutes,
       handleChangeInputSeconds,
-      minutes,
-      seconds,
+      valueFormMinutes,
+      valueFormSeconds,
       disabled,
     } = this.props;
     return (
@@ -21,7 +21,7 @@ class CountdownInput extends PureComponent {
             step={15}
             onChange={handleChangeSlider}
             tooltipVisible={false}
-            value={minutes * 60 + seconds}
+            value={valueFormMinutes * 60 + valueFormSeconds}
             disabled={disabled}
             autoFocus
           />
@@ -34,7 +34,7 @@ class CountdownInput extends PureComponent {
               max={720}
               step={1}
               onChange={handleChangeInputMinutes}
-              value={minutes}
+              value={valueFormMinutes}
               disabled={disabled}
             />
           </div>
@@ -45,7 +45,7 @@ class CountdownInput extends PureComponent {
               max={59}
               step={1}
               onChange={handleChangeInputSeconds}
-              value={seconds}
+              value={valueFormSeconds}
               disabled={disabled}
             />
           </div>
@@ -59,16 +59,16 @@ CountdownInput.propTypes = {
   handleChangeSlider: PropTypes.func,
   handleChangeInputMinutes: PropTypes.func,
   handleChangeInputSeconds: PropTypes.func,
-  minutes: PropTypes.number,
-  seconds: PropTypes.number,
+  valueFormMinutes: PropTypes.number,
+  valueFormSeconds: PropTypes.number,
   disabled: PropTypes.bool,
 };
 CountdownInput.defaultProps = {
   handleChangeSlider: null,
   handleChangeInputMinutes: null,
   handleChangeInputSeconds: null,
-  minutes: 0,
-  seconds: 0,
+  valueFormMinutes: 0,
+  valueFormSeconds: 0,
   disabled: false,
 };
 export default CountdownInput;

@@ -11,6 +11,8 @@ class Countdown extends Component {
       startTimeCountdown: 0,
       minutes: 0,
       seconds: 0,
+      valueFormMinutes: 0,
+      valueFormSeconds: 0,
       disabled: false,
     };
     this.audio = new Audio(audioSRC);
@@ -46,13 +48,22 @@ class Countdown extends Component {
 
   reset = () => {
     clearInterval(this.timer);
-    this.setState({ minutes: 0, seconds: 0, onCountdown: false, disabled: false });
+    this.setState({
+      minutes: 0,
+      seconds: 0,
+      onCountdown: false,
+      disabled: false,
+      valueFormMinutes: 0,
+      valueFormSeconds: 0,
+    });
   };
 
   handleChangeSlider = value => {
     this.setState({
       minutes: Math.floor(value / 60),
       seconds: Math.floor(value % 60),
+      valueFormMinutes: Math.floor(value / 60),
+      valueFormSeconds: Math.floor(value % 60),
       startTimeCountdown: value,
     });
   };
@@ -61,20 +72,32 @@ class Countdown extends Component {
     const { seconds } = this.state;
     this.setState({
       minutes: value,
-      startTimeCountdown: value * 60 + seconds,
+      seconds: value === 720 ? 0 : seconds,
+      valueFormMinutes: value,
+      valueFormSeconds: value === 720 ? 0 : seconds,
+      startTimeCountdown: value * 60 + (value === 720 ? 0 : seconds),
     });
   };
 
   handleChangeInputSeconds = value => {
     const { minutes } = this.state;
     this.setState({
-      seconds: value,
-      startTimeCountdown: value + minutes * 60,
+      seconds: minutes === 720 ? 0 : value,
+      valueFormSeconds: minutes === 720 ? 0 : value,
+      startTimeCountdown: minutes === 720 ? 0 : value + minutes * 60,
     });
   };
 
   render() {
-    const { onCountdown, startTimeCountdown, minutes, seconds, disabled } = this.state;
+    const {
+      onCountdown,
+      startTimeCountdown,
+      minutes,
+      seconds,
+      valueFormMinutes,
+      valueFormSeconds,
+      disabled,
+    } = this.state;
     return (
       <div className="countdown">
         <div className="countdown__inner">
@@ -103,8 +126,8 @@ class Countdown extends Component {
               handleChangeInputMinutes={this.handleChangeInputMinutes}
               handleChangeInputSeconds={this.handleChangeInputSeconds}
               disabled={disabled}
-              minutes={minutes}
-              seconds={seconds}
+              valueFormMinutes={valueFormMinutes}
+              valueFormSeconds={valueFormSeconds}
             />
           </div>
         </div>
