@@ -9,101 +9,102 @@ class Countdown extends Component {
     this.state = {
       onCountdown: false,
       startTimeCountdown: 0,
-      runningTime: 0,
-      disabledSlider: false,
+      minutes: 0,
+      seconds: 0,
+      disabled: false,
     };
     this.audio = new Audio(audioSRC);
   }
 
-  startCountdown = () => {
+  start = () => {
+    const { minutes, seconds } = this.state;
+    let countDownTime = minutes * 60 + seconds;
     this.setState({
       onCountdown: true,
-      disabledSlider: true,
+      disabled: true,
     });
-
     this.timer = setInterval(() => {
-      const { runningTime } = this.state;
-      const newTime = runningTime - 1;
-      if (newTime >= 0) {
-        this.setState({
-          runningTime: newTime,
-        });
-      } else {
+      countDownTime -= 1;
+      if (countDownTime < 0) {
         clearInterval(this.timer);
-        this.setState({ onCountdown: false, disabledSlider: false });
         this.audio.play();
+        this.setState({ onCountdown: false, disabled: false });
+      } else {
+        this.setState({
+          minutes: Math.floor(countDownTime / 60),
+          seconds: Math.floor(countDownTime % 60),
+          onCountdown: true,
+        });
       }
     }, 1000);
   };
 
-  stopCountdown = () => {
+  stop = () => {
     clearInterval(this.timer);
     this.setState({ onCountdown: false });
   };
 
-  resetCountdown = () => {
+  reset = () => {
     clearInterval(this.timer);
-    this.setState({ runningTime: 0, onCountdown: false, disabledSlider: false });
+    this.setState({ minutes: 0, seconds: 0, onCountdown: false, disabled: false });
   };
 
   handleChangeSlider = value => {
     this.setState({
-      runningTime: value,
+      minutes: Math.floor(value / 60),
+      seconds: Math.floor(value % 60),
       startTimeCountdown: value,
     });
   };
 
   handleChangeInputMinutes = value => {
+    const { seconds } = this.state;
     this.setState({
-      runningTime: value * 60,
-      startTimeCountdown: value * 60,
+      minutes: value,
+      startTimeCountdown: value * 60 + seconds,
     });
   };
 
   handleChangeInputSeconds = value => {
+    const { minutes } = this.state;
     this.setState({
-      runningTime: value,
-      startTimeCountdown: value,
+      seconds: value,
+      startTimeCountdown: value + minutes * 60,
     });
   };
 
-  msToTime = duration => {
-    let seconds = parseInt(duration % 60, 10);
-    let minutes = parseInt((duration / 60) % 60, 10);
-
-    minutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    seconds = seconds < 10 ? ` 0${seconds} ` : ` ${seconds} `;
-    return `${minutes} : ${seconds}`;
-  };
-
   render() {
-    const { onCountdown, startTimeCountdown, runningTime, disabledSlider } = this.state;
+    const { onCountdown, startTimeCountdown, minutes, seconds, disabled } = this.state;
     return (
       <div className="countdown">
         <div className="countdown__inner">
           <div className="countdown__progress">
             <Progress
-              percent={Math.round((runningTime / startTimeCountdown) * 100)}
+              percent={Math.round(((minutes * 60 + seconds) / startTimeCountdown) * 100)}
               showInfo={false}
             />
           </div>
-          <h1 className="countdown__display">{this.msToTime(runningTime)}</h1>
+          <h1 className="countdown__display">
+            {minutes < 10 ? `0${minutes}` : `${minutes}`} :{' '}
+            {seconds < 10 ? ` 0${seconds} ` : ` ${seconds} `}
+          </h1>
           <div className="countdown__control">
             <Button
               type={onCountdown ? 'danger' : 'primary'}
-              onClick={onCountdown ? this.stopCountdown : this.startCountdown}
+              onClick={onCountdown ? this.stop : this.start}
             >
               {onCountdown ? 'stop' : 'start'}
             </Button>
-            <Button onClick={this.resetCountdown}>reset</Button>
+            <Button onClick={this.reset}>reset</Button>
           </div>
           <div className="countdowninput">
             <CountdownInput
               handleChangeSlider={this.handleChangeSlider}
               handleChangeInputMinutes={this.handleChangeInputMinutes}
               handleChangeInputSeconds={this.handleChangeInputSeconds}
-              disabledSlider={disabledSlider}
-              runningTime={runningTime}
+              disabled={disabled}
+              minutes={minutes}
+              seconds={seconds}
             />
           </div>
         </div>
