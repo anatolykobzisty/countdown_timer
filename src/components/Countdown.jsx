@@ -30,7 +30,12 @@ class Countdown extends Component {
       if (countDownTime < 0) {
         clearInterval(this.timer);
         this.audio.play();
-        this.setState({ onCountdown: false, disabled: false });
+        this.setState({
+          onCountdown: false,
+          valueFormMinutes: 0,
+          valueFormSeconds: 0,
+          disabled: false,
+        });
       } else {
         this.setState({
           minutes: Math.floor(countDownTime / 60),
